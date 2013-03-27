@@ -1,12 +1,25 @@
 #!/usr/bin/python
+
+'''
+Simple tool inspired by Deep Space Vagabond
+
+It generates a random address and checks its balance on blockexplorer.com or blockchain.info.
+If the balance is non-zero it will stop searching and start a celebration!
+'''
+
 from coinkit.address import Address
 from coinkit.webapi import WebApi
 import time
 
 while True:
     a = Address()
+    # use blockexplorer.com
     balance = WebApi.balance_bec(a.pub)
+    # use blockchain.info
+    # balance = WebApi.balance_bci(a.pub)
     print a.pub, a.priv, balance
     if balance > 0:
         break
     time.sleep(1)
+
+print 'Hurray!'

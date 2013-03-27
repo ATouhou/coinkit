@@ -1,4 +1,10 @@
 #!/usr/bin/python
+
+'''
+Very simple example showing how to generate an address and its private key
+'''
+
 from coinkit.address import Address
+
 a = Address()
 print a.pub, a.priv
