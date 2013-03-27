@@ -1,0 +1,4 @@
+#!/usr/bin/python
+from coinkit.address import Address
+a = Address()
+print a.pub, a.priv
