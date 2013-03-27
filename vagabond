@@ -1,0 +1,14 @@
+#!/usr/bin/python
+from coinkit.address import Address
+from coinkit.webapi import WebApi
+import random
+import time
+
+while True:
+    s = ''.join(random.choice('0123456789abcdef') for _ in range(64))
+    a = Address.from_secret(s)
+    balance = WebApi.balance_bec(a.pub)
+    print a.pub, a.priv, balance
+    if balance > 0:
+        break
+    time.sleep(1)
