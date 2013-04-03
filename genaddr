@@ -7,4 +7,17 @@ Very simple example showing how to generate an address and its private key
 from coinkit.address import Address
 
 a = Address()
+# random address
+print a.pub, a.priv
+
+a = Address.from_secret('c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a')
+# should be 1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T 5KJvsngHeMpm884wtkJNzQGaCErckhHJBGFsvd3VyK5qMZXj3hS
+print a.pub, a.priv
+
+a = Address.from_passphrase('correct horse battery staple')
+# should be 1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T 5KJvsngHeMpm884wtkJNzQGaCErckhHJBGFsvd3VyK5qMZXj3hS
+print a.pub, a.priv
+
+a = Address.from_privkey('5KJvsngHeMpm884wtkJNzQGaCErckhHJBGFsvd3VyK5qMZXj3hS')
+# should be 1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T 5KJvsngHeMpm884wtkJNzQGaCErckhHJBGFsvd3VyK5qMZXj3hS
 print a.pub, a.priv
