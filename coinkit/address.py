@@ -1,8 +1,8 @@
 import os
 import binascii
 import ecdsa
-import hashlib
-from base58 import base58_check_decode
+from base58 import base58_check_decode, base58_check_encode, base58_encode_padded
+from hash import shash, rhash
 
 _p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2FL
 _r = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141L
@@ -21,6 +21,8 @@ class Address(object):
     @classmethod
     def from_secret(cls, secret):
         if len(secret) == 64:
+            return Address(binascii.unhexlify(secret))
+        elif len(secret) == 32:
             return Address(secret)
         else:
             raise Exception("Secret has to be exactly 32 bytes")
@@ -29,7 +31,7 @@ class Address(object):
     def from_passphrase(cls, passphrase):
         secret = passphrase.encode('utf8')
         for i in range(1): # just one round
-            secret = hashlib.sha256(secret).digest()
+            secret = shash(secret)
         return Address(secret)
 
     @classmethod
@@ -43,7 +45,10 @@ class Address(object):
 
     def __init__(self, secret = None):
         if not secret:
-            secret = binascii.hexlify(os.urandom(32))
+            secret = os.urandom(32)
         self.secret = ecdsa.util.string_to_number(secret)
-        self.pub = ecdsa.ecdsa.Public_key(generator_secp256k1, generator_secp256k1 * self.secret)
-        self.priv = ecdsa.ecdsa.Private_key(self.pub, secret)
+        self.pubkey = ecdsa.ecdsa.Public_key(generator_secp256k1, generator_secp256k1 * self.secret)
+        self.privkey = ecdsa.ecdsa.Private_key(self.pubkey, secret)
+        pubhex = ('04' + '%064x' % self.pubkey.point.x() + '%064x' % self.pubkey.point.y()).decode('hex')
+        self.pub = base58_check_encode(rhash(pubhex))
+        self.priv = base58_check_encode(chr(128) + self.privkey.secret_multiplier)[1:51]
