@@ -40,7 +40,7 @@ class Address(object):
         return Address(secret)
 
     @classmethod
-    def from_seed(cls, seed, idx):
+    def from_electrum_seed(cls, seed, idx):
         raise NotImplementedError
 
     def __init__(self, secret = None):
@@ -51,4 +51,4 @@ class Address(object):
         self.privkey = ecdsa.ecdsa.Private_key(self.pubkey, secret)
         pubhex = ('04' + '%064x' % self.pubkey.point.x() + '%064x' % self.pubkey.point.y()).decode('hex')
         self.pub = base58_check_encode(rhash(pubhex))
-        self.priv = base58_check_encode(chr(128) + self.privkey.secret_multiplier)[1:51]
+        self.priv = base58_check_encode(self.privkey.secret_multiplier, 0x80)
