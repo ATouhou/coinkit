@@ -51,4 +51,9 @@ class Address(object):
         self.privkey = ecdsa.ecdsa.Private_key(self.pubkey, secret)
         pubhex = ('04' + '%064x' % self.pubkey.point.x() + '%064x' % self.pubkey.point.y()).decode('hex')
         self.pub = base58_check_encode(rhash(pubhex))
+        if self.pubkey.point.y() % 2:
+            pubhex = ('03' + '%064x' % self.pubkey.point.x()).decode('hex')
+        else:
+            pubhex = ('02' + '%064x' % self.pubkey.point.x()).decode('hex')
+        self.pubc = base58_check_encode(rhash(pubhex))
         self.priv = base58_check_encode(self.privkey.secret_multiplier, 0x80)
