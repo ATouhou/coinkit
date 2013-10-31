@@ -14,9 +14,9 @@ import time
 while True:
     a = Address()
     # use blockexplorer.com
-    balance = WebApi.balance_bec(a.pub)
+    # balance = WebApi.balance_bec(a.pub)
     # use blockchain.info
-    # balance = WebApi.balance_bci(a.pub)
+    balance = WebApi.balance_bci(a.pub)
     print a.pub, a.priv, balance
     if balance > 0:
         break
